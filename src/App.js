@@ -8,17 +8,15 @@ import cookieParser from "cookie-parser"
 const app=express()
 
 
-
+const allowedOrgin=process.env.NODE_ENV==="production" ? "https://blog-app-frontend-flame.vercel.app":"http://localhost:3001"
 
 
 /// need to improve later 
 app.use(cors({
-    // origin: process.env.CORS_ORIGIN, 
-    // credentials: true
-
-    origin: 'http://localhost:3001',  // Allow requests from your frontend's origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow the methods you need
     
+
+    origin: allowedOrgin,  // Allow requests from your frontend's origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow the methods you need   
     credentials: true,
 }))
 
