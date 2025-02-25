@@ -48,6 +48,70 @@ const otpSendController=asyncHandler(async(req,res)=>{
 
 })
 
+//login controller for otp
+// const loginController=asyncHandler(async(req,res)=>{
+
+//     const {phone}=req.body;
+
+//     if(!phone){
+//         throw new ApiError(400,"phone number necessary while logging in")
+//     }
+
+//     const user=await User.findOne({phone})
+//     console.log("user",user)
+//     if(!user){
+//         throw new ApiError(400,"user not found while logging in")
+//     }
+
+
+   
+
+
+
+//     const otp=randomInt(1000,9999).toString()
+//     console.log(otp)
+
+//     console.log("user_id",user._id)
+
+
+//     const payload={
+//         otp,
+//         user:user._id.toString(),
+        
+//        }
+
+
+//        const option={
+//         expiresIn:process.env.OTP_TOKEN_EXPIRY
+//     }
+
+//     console.log("OTP_TOKEN_EXPIRY",process.env.OTP_TOKEN_EXPIRY)
+
+
+    
+    
+   
+   
+// const otpToken= jwt.sign(payload,process.env.OTP_TOKEN_SECRET,option)
+   
+
+  
+
+// const resUser=await User.findOne({_id:user._id}).select("-password -refreshToken")
+
+
+
+
+
+
+// return res.status(200).json(new ApiResponse(200,{user:resUser,otpToken},"otp sent successfully" ))
+   
+ 
+
+
+// })
+
+
 
 const loginController=asyncHandler(async(req,res)=>{
 
@@ -58,81 +122,27 @@ const loginController=asyncHandler(async(req,res)=>{
     }
 
     const user=await User.findOne({phone})
-    console.log("user",user)
+    
     if(!user){
-        throw new ApiError(400,"user not found while logging in")
+        throw new ApiError(401,"user not found while logging in")
     }
 
-
-   
-
-
-
-    const otp=randomInt(1000,9999).toString()
-    console.log(otp)
-
-    console.log("user_id",user._id)
-
-
-    const payload={
-        otp,
-        user:user._id.toString(),
-        
-       }
-
-
-       const option={
-        expiresIn:process.env.OTP_TOKEN_EXPIRY
-    }
-
-    console.log("OTP_TOKEN_EXPIRY",process.env.OTP_TOKEN_EXPIRY)
-
-
-///**************************************open this later because its costly */
-  
-    // const message = await client.messages.create({
-    //     body: `your verification code for blog app is ${otp}`,
-    //      from: '+16812442355',
-    //      to:`+${user.countryCode}${user.phone}`
-    //   });
-
-    //   if(!message){
-    //     throw new ApiError(400,"message not sent")
-    //   }
-
-    
-    
-   
-   
-const otpToken= jwt.sign(payload,process.env.OTP_TOKEN_SECRET,option)
-   
-
-   
-// const options={
-//     maxAge: 3600000, // Cookie expires in 1 hour
-//     httpOnly: true,  // Cookie cannot be accessed by JavaScript
-//     secure: false,   // Set to true if using HTTPS
-//     sameSite: 'None' 
-// }
-
-
-const resUser=await User.findOne({_id:user._id}).select("-password -refreshToken")
-
-
-// res.setHeader("Authorization",`Bearer ${otpToken}`)
-
-// res.setHeader("Set-Cookie",`otpToken=${otpToken}; HttpOnly; Path=/; SameSite=None; Secure`)
-
-
-
-return res.status(200).json(new ApiResponse(200,{user:resUser,otpToken},"otp sent successfully" ))
-   
+    const accessToken=user.generateAccessToken()
+    const refreshToken=user.generateRefreshToken()
  
+    user.refreshToken=refreshToken
+
+
+
+    return res.status(200).json(new ApiResponse(200,{user, accessToken,refreshToken},"access token sent sucessfully"))
+   
 
 
 })
 
 
+
+////not used now 
 const validateOtpController=asyncHandler(async(req,res)=>{
     const {otp,otpToken}=req.body
    

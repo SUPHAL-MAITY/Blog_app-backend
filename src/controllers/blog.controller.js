@@ -162,6 +162,9 @@ const getOwnBlogsController=asyncHandler(async(req,res)=>{
 
 
     const id=req.user;
+    if(!id){
+        throw new ApiError(401,"user id is not present !")
+    }
 
     const blogs=await Blogs.find({author:id}).populate("author","name").skip(skip).limit(limit).sort({createdAt:-1})
 
