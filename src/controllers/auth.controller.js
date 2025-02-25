@@ -115,16 +115,23 @@ const otpSendController=asyncHandler(async(req,res)=>{
 
 const loginController=asyncHandler(async(req,res)=>{
 
-    const {phone}=req.body;
+    const {phone,password}=req.body;
 
-    if(!phone){
-        throw new ApiError(400,"phone number necessary while logging in")
+    if(!phone || !password){
+        throw new ApiError(400,"phone number and password necessary while logging in")
     }
 
     const user=await User.findOne({phone})
     
     if(!user){
-        throw new ApiError(401,"user not found while logging in")
+        throw new ApiError(400,"user not found while logging in")
+    }
+
+    let isValid=await user.comparePassword(password)
+
+    if(!isValid){
+        throw new ApiError(401,"invalid credentials")
+
     }
 
     const accessToken=user.generateAccessToken()
