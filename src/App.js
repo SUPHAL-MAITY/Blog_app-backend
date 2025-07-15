@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser"
 const app=express()
 
 
-const allowedOrgin=process.env.NODE_ENV==="production" ? "https://blog-app-frontend-ten.vercel.app":"http://localhost:3001"
+const allowedOrgin=process.env.NODE_ENV==="production" ? "https://blog-app-frontend-blue-seven.vercel.app":"http://localhost:3001"
 
 
 /// need to improve later 
