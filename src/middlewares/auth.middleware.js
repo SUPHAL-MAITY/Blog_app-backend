@@ -134,12 +134,13 @@ const verifyJwtToken=asyncHandler(async(req,res,next)=>{
 
 const decodeToken=asyncHandler(async(req,res,next)=>{
     const token=req.headers["authorization"].split(" ")[1]
-    console.log("token from headers",token)
+    
     if(!token){
         throw new ApiError(401,"token is missing while decoding token for auth controller")
     }
 
     const decodedToken=jwt.verify(token,process.env.ACCESS_TOKEN_SECRET)
+    console.log("decodedToken",decodedToken)
     if(!decodedToken){
         throw new ApiError(401,"token is invalid while decoding token for auth controller")
     }
@@ -147,7 +148,7 @@ const decodeToken=asyncHandler(async(req,res,next)=>{
 
     req.user=decodedToken._id;
     next()
-
+     
 
 
 })
